@@ -1,7 +1,6 @@
-/* eslint-disable import/prefer-default-export */
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTransitions1594347743251 implements MigrationInterface {
+class CreateTransitions1594418240891 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -19,16 +18,17 @@ export class CreateTransitions1594347743251 implements MigrationInterface {
             type: 'varchar',
           },
           {
-            name: 'value',
-            type: 'integer',
+            name: 'category_id',
+            type: 'uuid',
+            isNullable: true,
           },
           {
             name: 'type',
             type: 'varchar',
           },
           {
-            name: 'category_id',
-            type: 'uuid',
+            name: 'value',
+            type: 'integer',
           },
           {
             name: 'created_at',
@@ -49,3 +49,5 @@ export class CreateTransitions1594347743251 implements MigrationInterface {
     await queryRunner.dropTable('transactions');
   }
 }
+
+export default CreateTransitions1594418240891;

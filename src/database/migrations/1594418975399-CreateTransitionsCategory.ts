@@ -1,8 +1,11 @@
-/* eslint-disable import/prefer-default-export */
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
-export class CreateTransitionsCategory1594348699060
-  implements MigrationInterface {
+class CreateTransitionsCategory1594418975399 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -32,9 +35,23 @@ export class CreateTransitionsCategory1594348699060
         ],
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'transactions',
+      new TableForeignKey({
+        name: 'TransactionCategory',
+        columnNames: ['category_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'category',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropTable('category');
+    await queryRunner.dropForeignKey('transactions', 'TransactionCategory');
   }
 }
+export default CreateTransitionsCategory1594418975399;

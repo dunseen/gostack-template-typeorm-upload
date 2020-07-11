@@ -3,6 +3,7 @@ import { getCustomRepository } from 'typeorm';
 
 import TransactionsRepository from '../repositories/TransactionsRepository';
 import CreateTransactionService from '../services/CreateTransactionService';
+import CreateTransactionCategory from '../services/CreateTransactionCategory';
 // import DeleteTransactionService from '../services/DeleteTransactionService';
 // import ImportTransactionsService from '../services/ImportTransactionsService';
 
@@ -16,18 +17,23 @@ transactionsRouter.get('/', async (request, response) => {
 });
 
 transactionsRouter.post('/', async (request, response) => {
-  const { title, value, type, category_id } = request.body;
+  const { title, value, type, category } = request.body;
 
+  const createCategory = new CreateTransactionCategory();
   const createTransaction = new CreateTransactionService();
 
-  const transaction = createTransaction.execute({
+  const newCategory = await createCategory.execute({
+    category,
+  });
+
+  const transaction = await createTransaction.execute({
     title,
     value,
     type,
-    category_id,
+    category: newCategory.id,
   });
 
-  return response.json(transaction);
+  return response.json({ transactions: [transaction, newCategory] });
 });
 
 transactionsRouter.delete('/:id', async (request, response) => {
